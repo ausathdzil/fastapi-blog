@@ -13,6 +13,9 @@ SIZE_MAX = 20
 async def read_posts(
     q: str | None = None, page_in: int = PAGE_DEFAULT, size_in: int = SIZE_DEFAULT
 ):
+    """
+    Retrieve posts with search and pagination.
+    """
     page = max(PAGE_DEFAULT, page_in)
     size = SIZE_DEFAULT if size_in < 1 else min(size_in, SIZE_MAX)
     skip = (page - 1) * size
@@ -39,6 +42,9 @@ async def read_posts(
 
 @router.get("/{id}", response_model=Post)
 async def read_post(id: str):
+    """
+    Get post by ID.
+    """
     post = await Post.get(id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
@@ -47,12 +53,18 @@ async def read_post(id: str):
 
 @router.post("/", response_model=Post)
 async def create_post(post_in: PostCreate):
+    """
+    Create a new post.
+    """
     post = Post(**post_in.model_dump())
     return await post.insert()
 
 
 @router.put("/{id}", response_model=Post)
 async def update_post(id: str, post_in: PostUpdate):
+    """
+    Update a post.
+    """
     post = await Post.get(id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
@@ -61,6 +73,9 @@ async def update_post(id: str, post_in: PostUpdate):
 
 @router.delete("/{id}", response_model=Message)
 async def delete_post(id: str):
+    """
+    Delete a post.
+    """
     post = await Post.get(id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
