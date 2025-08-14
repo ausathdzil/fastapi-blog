@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def MONGO_CONNECTION_STRING(self) -> str:
-        return f"mongodb://{self.MONGO_USER}:{self.MONGO_PASSWORD}@{self.MONGO_SERVER}:{self.MONGO_PORT}/{self.MONGO_DB}"
+        return f"mongodb://{self.MONGO_USER}:{self.MONGO_PASSWORD}@{self.MONGO_SERVER}:{self.MONGO_PORT}/{self.MONGO_DB}?authSource=admin"
 
 
 settings = Settings()

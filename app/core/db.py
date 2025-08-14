@@ -5,11 +5,9 @@ from app.core.config import settings
 from app.models import Post
 
 
-async def init():
-    uri = settings.MONGO_CONNECTION_STRING
-    client = AsyncMongoClient(uri)
-    db = client[settings.MONGO_DB]
+async def init_db():
+    client = AsyncMongoClient(settings.MONGO_CONNECTION_STRING)
     await init_beanie(
-        database=db,
+        database=client[settings.MONGO_DB],
         document_models=[Post],
     )
