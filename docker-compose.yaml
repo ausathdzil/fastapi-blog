@@ -10,14 +10,16 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER?Variable not set}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD?Variable not set}
     healthcheck:
-      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping')"]
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
       interval: 10s
       retries: 5
       start_period: 30s
-      timeout: 10s
+      timeout: 5s
 
   backend:
-    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
     networks:
       - default

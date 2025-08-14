@@ -21,19 +21,9 @@ MONGO_PORT=
 MONGO_DB=
 MONGO_USER=
 MONGO_PASSWORD=
-
-DOCKER_IMAGE_BACKEND=
 ```
 
 ## Setup
-
-- Docker build
-
-```bash
-docker build -t fastapi-blog-backend:latest .
-```
-
-- Docker compose
 
 ```bash
 docker compose up
