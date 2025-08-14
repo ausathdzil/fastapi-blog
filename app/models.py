@@ -32,6 +32,12 @@ class PostCreate(BaseModel):
 
 class PostsPublic(BaseModel):
     data: list[Post]
+    count: int
+    page: int
+    pages: int
+    size: int
+    has_next: bool
+    has_prev: bool
 
 
 class PostUpdate(BaseModel):
