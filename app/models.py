@@ -1,8 +1,10 @@
 from datetime import datetime
 from time import timezone
 
+import pymongo
 from beanie import Document
 from pydantic import Field
+
 
 class Post(Document):
     title: str = Field(min_length=1, max_length=50)
@@ -13,3 +15,10 @@ class Post(Document):
 
     class Settings:
         name = "posts"
+        indexes = [
+            [("published_at", pymongo.DESCENDING)],
+            [
+                ("title", pymongo.TEXT),
+                ("summary", pymongo.TEXT),
+            ],
+        ]
