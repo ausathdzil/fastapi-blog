@@ -1,17 +1,16 @@
-from datetime import datetime
-from time import timezone
+from datetime import datetime, timezone
 
 import pymongo
 from beanie import Document
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 
 class Post(Document):
     title: str = Field(min_length=1, max_length=50)
     published_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     summary: str = Field(min_length=1, max_length=160)
-    author: str = Field(min_length=1, max_length=50)
     content: str = Field(min_length=1)
+    author: str = Field(min_length=1, max_length=50)
 
     class Settings:
         name = "posts"
@@ -22,3 +21,25 @@ class Post(Document):
                 ("summary", pymongo.TEXT),
             ],
         ]
+
+
+class PostCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=50)
+    summary: str = Field(min_length=1, max_length=160)
+    content: str = Field(min_length=1)
+    author: str = Field(min_length=1, max_length=50)
+
+
+class PostsPublic(BaseModel):
+    data: list[Post]
+
+
+class PostUpdate(BaseModel):
+    title: str | None = Field(default=None, min_length=1, max_length=50)
+    summary: str | None = Field(default=None, min_length=1, max_length=160)
+    content: str | None = Field(default=None, min_length=1)
+    author: str | None = Field(default=None, min_length=1, max_length=50)
+
+
+class Message(BaseModel):
+    message: str
