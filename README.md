@@ -8,7 +8,13 @@ A simple blog backend made with FastAPI + MongoDB
 - FastAPI
 - MongoDB
 - Beanie
+- PyMongo
 - Pydantic
+
+### Authentication
+
+- PyJWT
+- Passlib[bcrypt]
 
 ## Environment Variables
 
@@ -21,6 +27,8 @@ MONGO_PORT=
 MONGO_DB=
 MONGO_USER=
 MONGO_PASSWORD=
+
+SECRET_KEY=
 ```
 
 ## Setup

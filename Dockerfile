@@ -1,12 +1,12 @@
-FROM python:3.10-slim
+FROM python:3.13-slim
 
-WORKDIR /fastapi-blog
+WORKDIR /app
 
-COPY ./requirements.txt /fastapi-blog/requirements.txt
+COPY requirements.txt .
 
-RUN pip install --no-cache-dir --upgrade -r /fastapi-blog/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-COPY ./app /fastapi-blog/app
+COPY . .
 
 EXPOSE 8000
 

@@ -1,18 +1,21 @@
 from datetime import datetime, timezone
 
 import pymongo
-from beanie import Document
+from beanie import Document, Link
 from pydantic import BaseModel, EmailStr, Field
+
+from app.models.post import Post
 
 
 class UserBase(BaseModel):
     username: str = Field(min_length=1, max_length=50)
-    email: EmailStr = Field(unique=True, index=True, max_length=255)
+    email: EmailStr = Field(unique=True, max_length=255)
 
 
 class User(UserBase, Document):
     hashed_password: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    posts: list[Link[Post]] | None = None
 
     class Settings:
         name = "users"
@@ -35,10 +38,4 @@ class UserPublic(UserBase):
 
 
 class UsersPublic(BaseModel):
-    data: list[UserPublic]
-    count: int
-    page: int
-    pages: int
-    size: int
-    has_next: bool
-    has_prev: bool
+    data: list[User]
