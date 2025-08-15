@@ -1,11 +1,8 @@
 from datetime import datetime, timezone
-from typing import List
 
 import pymongo
-from beanie import Document, Link
+from beanie import Document
 from pydantic import BaseModel, EmailStr, Field
-
-from app.models.post import Post
 
 
 class UserBase(BaseModel):
@@ -16,7 +13,6 @@ class UserBase(BaseModel):
 class User(UserBase, Document):
     hashed_password: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    posts: List[Link[Post]] | None = Field(default_factory=list)
 
     class Settings:
         name = "users"

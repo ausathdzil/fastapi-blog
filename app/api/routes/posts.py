@@ -1,4 +1,3 @@
-from beanie import DeleteRules, WriteRules
 from fastapi import APIRouter, HTTPException
 
 from app.api.deps import CurrentUser
@@ -60,7 +59,8 @@ async def create_post(post_in: PostCreate, current_user: CurrentUser):
     Create a new post.
     """
     post = Post(**post_in.model_dump(), author=current_user.username)
-    return await post.save(link_rule=WriteRules.WRITE)
+    await post.save()
+    return post
 
 
 @router.put("/{id}", response_model=Post)
@@ -75,9 +75,12 @@ async def update_post(id: str, post_in: PostUpdate, current_user: CurrentUser):
     if post.author != current_user.username:
         raise HTTPException(status_code=403, detail="Forbidden")
 
-    return await post.replace(
-        post_in.model_dump(exclude_unset=True), link_rule=WriteRules.WRITE
-    )
+    post.title = post_in.title or post.title
+    post.summary = post_in.summary or post.summary
+    post.content = post_in.content or post.content
+
+    await post.save()
+    return post
 
 
 @router.delete("/{id}", response_model=Message)
@@ -91,5 +94,5 @@ async def delete_post(id: str, current_user: CurrentUser):
     if post.author != current_user.username:
         raise HTTPException(status_code=403, detail="Forbidden")
 
-    await post.delete(link_rule=DeleteRules.DELETE_LINKS)
+    await post.delete()
     return Message(message="Post deleted successfully")

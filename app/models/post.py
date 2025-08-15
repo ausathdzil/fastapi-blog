@@ -13,7 +13,7 @@ class PostBase(BaseModel):
 
 class Post(PostBase, Document):
     published_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    author: str | None = None
+    author: str
 
     class Settings:
         name = "posts"
