@@ -2,7 +2,7 @@ from beanie import init_beanie
 from pymongo import AsyncMongoClient
 
 from app.core.config import settings
-from app.models import Post
+from app.models.post import Post
 
 
 async def init_db():

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from app.models import Message, Post, PostCreate, PostsPublic, PostUpdate
+from app.models.post import Message, Post, PostCreate, PostsPublic, PostUpdate
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 
