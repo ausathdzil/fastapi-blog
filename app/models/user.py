@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import List
 
 import pymongo
 from beanie import Document, Link
@@ -15,7 +16,7 @@ class UserBase(BaseModel):
 class User(UserBase, Document):
     hashed_password: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    posts: list[Link[Post]] | None = None
+    posts: List[Link[Post]] | None = Field(default_factory=list)
 
     class Settings:
         name = "users"

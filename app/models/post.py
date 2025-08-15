@@ -13,7 +13,7 @@ class PostBase(BaseModel):
 
 class Post(PostBase, Document):
     published_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    author: str = Field(min_length=1, max_length=50)
+    author: str | None = None
 
     class Settings:
         name = "posts"
@@ -27,7 +27,7 @@ class Post(PostBase, Document):
 
 
 class PostCreate(PostBase):
-    author: str = Field(min_length=1, max_length=50)
+    pass
 
 
 class PostsPublic(BaseModel):
@@ -41,7 +41,9 @@ class PostsPublic(BaseModel):
 
 
 class PostUpdate(PostBase):
-    pass
+    title: str | None = None
+    summary: str | None = None
+    content: str | None = None
 
 
 class Message(BaseModel):

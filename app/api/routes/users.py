@@ -11,7 +11,7 @@ async def read_users_me(current_user: CurrentUser):
     return current_user
 
 
-@router.get("/", dependencies=[Depends(get_current_user)], response_model=UsersPublic)
+@router.get("/", response_model=UsersPublic)
 async def read_users():
     users = await User.find_all().to_list()
     return UsersPublic(data=users)

@@ -1,5 +1,7 @@
+from beanie import DeleteRules, WriteRules
 from fastapi import APIRouter, HTTPException
 
+from app.api.deps import CurrentUser
 from app.models.post import Message, Post, PostCreate, PostsPublic, PostUpdate
 
 router = APIRouter(prefix="/posts", tags=["posts"])
@@ -48,36 +50,46 @@ async def read_post(id: str):
     post = await Post.get(id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
+
     return post
 
 
 @router.post("/", response_model=Post)
-async def create_post(post_in: PostCreate):
+async def create_post(post_in: PostCreate, current_user: CurrentUser):
     """
     Create a new post.
     """
-    post = Post(**post_in.model_dump())
-    return await post.insert()
+    post = Post(**post_in.model_dump(), author=current_user.username)
+    return await post.save(link_rule=WriteRules.WRITE)
 
 
 @router.put("/{id}", response_model=Post)
-async def update_post(id: str, post_in: PostUpdate):
+async def update_post(id: str, post_in: PostUpdate, current_user: CurrentUser):
     """
     Update a post.
     """
     post = await Post.get(id)
+
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
-    return await post.set({**post_in.model_dump(exclude_unset=True)})
+    if post.author != current_user.username:
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    return await post.replace(
+        post_in.model_dump(exclude_unset=True), link_rule=WriteRules.WRITE
+    )
 
 
 @router.delete("/{id}", response_model=Message)
-async def delete_post(id: str):
+async def delete_post(id: str, current_user: CurrentUser):
     """
     Delete a post.
     """
     post = await Post.get(id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
-    await post.delete()
+    if post.author != current_user.username:
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    await post.delete(link_rule=DeleteRules.DELETE_LINKS)
     return Message(message="Post deleted successfully")
